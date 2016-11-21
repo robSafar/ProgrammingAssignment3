@@ -1,6 +1,6 @@
 rankall <- function(varOutcome, varRank = "best") {
         ## Read outcome data
-        masterData <- read.csv("outcome-of-care-measures.csv")
+        masterData <- read.csv("outcome-of-care-measures.csv", na.strings="Not Available", stringsAsFactors=FALSE)
         
         ## Check that outcome is valid
         validOutcome <- c("heart attack","heart failure","pneumonia") == varOutcome
@@ -17,10 +17,9 @@ rankall <- function(varOutcome, varRank = "best") {
         for(i in 1:length(listStates)) {
                 
                 stateData <- subset(masterData, masterData[,7]==listStates[i])
-                x <- stateData[,masterCol] == "Not Available"
-                stateData <- stateData[!x, ]
-                stateData[,masterCol] <- as.numeric(stateData[,masterCol])
                 stateData <- stateData[ order(stateData[,masterCol], stateData[,2]), ]
+                x <- is.na(stateData[,masterCol])
+                stateData <- stateData[!x,]
                 if(varRank == "best") { 
                         stateRank <- as.numeric(1)
                 } else {

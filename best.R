@@ -1,6 +1,6 @@
 best <- function(varState, varOutcome) {
         ## Read outcome data
-        masterData <- read.csv("outcome-of-care-measures.csv")
+        masterData <- read.csv("outcome-of-care-measures.csv", na.strings="Not Available", stringsAsFactors=FALSE)
         
         ## Check that state and outcome are valid
         listStates <- unique(masterData[,7])
@@ -19,9 +19,6 @@ best <- function(varState, varOutcome) {
         
         ## Return hospital name in that state with lowest 30-day death rate
         stateData <- masterData[ which(masterData[,7] == varState), ]
-        x <- stateData[,masterCol] == "Not Available"
-        stateData <- stateData[!x, ]
-        stateData[,masterCol] <- as.numeric(stateData[,masterCol])
         sortedData <- stateData[ order(stateData[,masterCol], stateData[,2]), ]
         print(as.vector(sortedData[1,2]))
         

@@ -1,6 +1,6 @@
 rankhospital <- function(varState, varOutcome, varRank="best") {
         ## Read outcome data
-        masterData <- read.csv("outcome-of-care-measures.csv")
+        masterData <- read.csv("outcome-of-care-measures.csv", na.strings="Not Available", stringsAsFactors=FALSE)
         
         ## Check that outcome is valid
         listStates <- unique(masterData[,7])
@@ -19,9 +19,8 @@ rankhospital <- function(varState, varOutcome, varRank="best") {
         
         ## Return hospital name in that state with the given rank
         stateData <- masterData[ which(masterData[,7] == varState), ]
-        x <- stateData[,masterCol] == "Not Available"
-        stateData <- stateData[!x, ]
-        stateData[,masterCol] <- as.numeric(stateData[,masterCol])
+        x <- is.na(stateData[,masterCol])
+        stateData <- stateData[!x,]
         sortedData <- stateData[ order(stateData[,masterCol], stateData[,2]), ]
         if(varRank == "best") {
                 stateRank <- as.numeric("1")
